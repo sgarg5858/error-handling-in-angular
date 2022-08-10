@@ -8,16 +8,23 @@ import { GlobalErrorHandlerService } from './error-handlers/global-error-handler
 import { ProdGlobalErrorHandlerService } from './error-handlers/prod-global-error-handler.service';
 import { Environment } from './models/Environment.model';
 import { ENVIRONMENT } from './tokens/environment.token';
-
+import {HttpClientModule, HTTP_INTERCEPTORS} from '@angular/common/http'
+import { GlobalHttpErrorHandlingInterceptorService } from './http-interceptors/global-http-error-handling-interceptor.service';
 @NgModule({
   declarations: [
     AppComponent
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
+    AppRoutingModule,
+    HttpClientModule
   ],
   providers: [
+    {
+      provide:HTTP_INTERCEPTORS,
+      multi:true,
+      useClass:GlobalHttpErrorHandlingInterceptorService
+    },
     { provide:ErrorHandler,
       useFactory:((env:Environment)=>{
 
